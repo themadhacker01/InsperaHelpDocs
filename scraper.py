@@ -1,10 +1,11 @@
 import requests, json, uuid
 from bs4 import BeautifulSoup
-from typing import List
 
 
-# Define constants for the script
+# The section ID for the Psychometrics section in Zendesk
 SECTION_ID = '22802387434397'
+
+# The base URL for the Zendesk API
 BASE_URL = 'https://support.inspera.com/api/v2/help_center/en-us'
 
 
@@ -13,7 +14,7 @@ def get_all_articles(section_id):
     print('Fetching article links via API...')
 
     # Extracts all article links from a given section ID
-    url = f'{BASE_URL}/sections/{SECTION_ID}/articles.json'
+    url = f'{BASE_URL}/sections/{section_id}/articles.json'
 
     # The API returns a JSON response containing article details
     response = requests.get(url)
@@ -23,9 +24,6 @@ def get_all_articles(section_id):
 
     print('Found '+ str(len(all_articles)) + ' articles in this section.')
     print('Fetching article contents...')
-
-    ex_art = all_articles[0]['body']
-    count_words_oneline = lambda text: len(text.split()) if text else 0
 
     return all_articles
 
@@ -144,11 +142,8 @@ def chunk_text_to_file(json_articles, chunk_size, overlap):
 
 # Main function to fetch article links and extract content
 def main():
-    # Psychometrics section ID
-    section_id = '22802387434397'
-
     # Get the article links, IDs, and contents from the specified section
-    raw_articles = get_all_articles(section_id)
+    raw_articles = get_all_articles(SECTION_ID)
 
     # Write the content of all articles to a JSON file
     write_content_to_file(raw_articles)
