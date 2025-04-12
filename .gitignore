@@ -1,3 +1,4 @@
 # Ignore files that store data
 data.json
 chunks.json
+.env
