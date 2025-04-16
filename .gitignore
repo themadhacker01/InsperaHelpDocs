@@ -2,3 +2,6 @@
 data.json
 chunks.json
 .env
+faiss_chunks.index
+metadata.json
+embedded_chunks.json

@@ -9,14 +9,16 @@ SECTION_ID = '22802387434397'
 BASE_URL = 'https://support.inspera.com/api/v2/help_center/en-us'
 
 
+# -------------------
 # Fetch all articles from the Psychometrics section using the Zendesk API
+# -------------------
 def get_all_articles(section_id):
     print('Fetching article links via API...')
 
     # Extracts all article links from a given section ID
     url = f'{BASE_URL}/sections/{section_id}/articles.json'
 
-    # The API returns a JSON response containing article details
+    # The API returns a JSON response containing page HTML
     response = requests.get(url)
 
     # Gets articles from the JSON response
@@ -28,21 +30,25 @@ def get_all_articles(section_id):
     return all_articles
 
 
+# -------------------
 # Fetch each article's content using its ID and extract its HTML content
+# -------------------
 def get_full_article(article_id):
     print(f'Fetching article {article_id}...')
 
     # Construct the URL for the article using its ID
     url = f'{BASE_URL}/articles/{article_id}.json'
 
-    # The API returns a JSON response containing article details
+    # The API returns a JSON response containing page HTML
     response = requests.get(url)
 
     # Returns the article content from the JSON response
     return response.json()['article']
 
 
+# -------------------
 # Function to clean the HTML content of the article
+# -------------------
 def clean_html(html_body):
     print('Cleaning HTML content...')
 
@@ -68,7 +74,9 @@ def clean_html(html_body):
     return '\n'.join(content_parts).strip()
 
 
+# -------------------
 # Function to write the cleaned content to a JSON file
+# -------------------
 def write_content_to_file(all_articles):
     print('Writing content from all articles to file...')
 
@@ -98,7 +106,9 @@ def write_content_to_file(all_articles):
     print(f'✅ Done. Stored {len(all_content)} articles.')
 
 
+# -------------------
 # Function to chunk the text into smaller pieces for processing
+# -------------------
 def chunk_text_to_file(json_articles, chunk_size, overlap):
     print('Chunking content and writing to file...')
 
@@ -140,7 +150,9 @@ def chunk_text_to_file(json_articles, chunk_size, overlap):
     print(f'✅ Done. Stored {len(chunked_data)} chunks.')
 
 
+# -------------------
 # Main function to fetch article links and extract content
+# -------------------
 def main():
     # Get the article links, IDs, and contents from the specified section
     raw_articles = get_all_articles(SECTION_ID)
@@ -157,6 +169,8 @@ def main():
     chunk_text_to_file(json_articles, chunk_size=300, overlap=50)
 
 
-# Execting the code using the main function
+# -------------------
+# Executing the code using the main function
+# -------------------
 if __name__ == '__main__':
     main()
