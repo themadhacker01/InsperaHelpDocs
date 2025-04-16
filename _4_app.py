@@ -29,19 +29,25 @@ genai.configure(api_key=api_key)
 # -------------------
 # Streamlit UI
 # -------------------
-def display_ui():
-    st.title("Document Retrieval & Summarization")
-    
-    # Upload or specify file paths for index and metadata (optional)
-    st.sidebar.header("File Paths")
-    index_file = st.sidebar.text_input("FAISS Index File Path", INDEX_FILE)
-    metadata_file = st.sidebar.text_input("Metadata File Path", METADATA_FILE)
+def display_ui(index_file=INDEX_FILE, metadata_file=METADATA_FILE):
+    # Set the title of the Streamlit app
+    st.header('Inspera Support AI')
+
+    # Sidebar for information about the application
+    st.sidebar.header('Have a question?')
+    st.sidebar.subheader('Simply enter your query and we will answer it for you.')
+    st.sidebar.write(
+        '''
+        This application allows you to respond to your query about the psychometrics dashboard.
+        It strictly adheres to material added in the Help Center articles and does not include any other information. 
+        '''
+    )
     
     # Input box for search query
-    query = st.text_input("Enter your query:", "")
+    query = st.text_input('', placeholder='Type your question here...')
 
-    # When the user presses the "Search" button
-    if st.button("Search"):
+    # When the user presses the 'Search' button
+    if st.button('Search'):
         if query:
             # Load the FAISS index and metadata
             index, metadata = load_assets(index_file, metadata_file)
@@ -53,18 +59,18 @@ def display_ui():
             summary = generate_summary(query, top_chunks)
 
             # Display the summary and relevant articles
-            st.subheader("Summary:")
+            st.subheader('Summary:')
             st.write(summary)
 
-            st.subheader("Relevant Articles:")
+            st.subheader('Relevant Articles:')
             for chunk in top_chunks:
-                st.markdown(f"- [{chunk['title']}]({chunk['url']})")
+                st.markdown(f'- [{chunk["title"]}]({chunk["url"]})')
         else:
-            st.warning("Please enter a query to search.")
+            st.warning('Please enter a query to search.')
 
 
 # -------------------
 # Main execution
 # -------------------
-if __name__ == "__main__":
+if __name__ == '__main__':
     display_ui()
