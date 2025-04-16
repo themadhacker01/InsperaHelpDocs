@@ -9,8 +9,12 @@ import google.generativeai as genai
 # Paths to the files
 INDEX_FILE = 'faiss_chunks.index'
 METADATA_FILE = 'metadata.json'
+
 # Number of top results to retrieve
-TOP_K = 5
+TOP_K = 3
+
+# Model name for Google Generative AI
+MODEL_NAME = 'models/gemini-1.5-pro-002'
 
 # Load environment variables from .env
 load_dotenv()
@@ -62,47 +66,52 @@ def semantic_search(query, index, metadata, k):
 # -------------------
 # Generate a summary from the top results using Gemini
 # -------------------
-def generate_summary(chunks):
+def generate_summary(query, chunks):
     print('Generating summary...')
 
     # Join the text of the top chunks to create a context for summarization
     context = '\n\n'.join([chunk['text'] for chunk in chunks])
 
+    # Initialize the Google Generative AI model
+    model = genai.GenerativeModel(model_name=MODEL_NAME)
+
     # Define the prompt for summarization
-    prompt = (
+    init_prompt = (
         '''
-        Use the following content to respond to the prompt concisely and clearly.
-        Ignore content that is not relevant to the prompt.
+        Use the context that is relevant to the query.
+        Provide some additional informatin in the response, if needed.
+        Be concise when you respond.
+        Do not change the terminology or keywords used in the document.
         The response must be coherent and easy to read.
         If you do not know the answer, say "I don't know".
-        If the answer is not in the content, say "The answer is not in the content".
-        Do not make up answers or provide information that is not in the content.
+        If the answer is not in the context, say "The answer is not in the context".
+        Do not make up answers or provide information that is not in the context.
         Do not include any disclaimers or unnecessary information.
         '''
-        f'\n\n{context}'
+        f'\n\Query:\n{query}'
+        f'\n\nContext:\n{context}'
     )
-
     # Generate the summary using Google Generative AI
-    model = genai.GenerativeModel(model_name="models/gemini-1.5-pro-002")
-    response = model.generate_content(prompt)
-    return response.text
+    init_response = model.generate_content(init_prompt)
+
+    return init_response.text
 
 
 # -------------------
 # Main function to test the flow
 # -------------------
-def main():
+def main(index_path=INDEX_FILE, metadata_path=METADATA_FILE, top_k=TOP_K):
     # Load the FAISS index and metadata
-    index, metadata = load_assets(index_path=INDEX_FILE, metadata_path=METADATA_FILE)
+    index, metadata = load_assets(index_path, metadata_path)
 
     # Prompt the user for a search query
     query = input('Enter your search query: ')
 
     # Perform semantic search to find the top k chunks
-    top_chunks = semantic_search(query, index, metadata, TOP_K)
+    top_chunks = semantic_search(query, index, metadata, top_k)
 
     # Summarize the top chunks
-    summary = generate_summary(top_chunks)
+    summary = generate_summary(query, top_chunks)
 
     print('\n🔎 Summary:')
     print(summary)

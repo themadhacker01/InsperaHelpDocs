@@ -5,6 +5,12 @@ from bs4 import BeautifulSoup
 # The section ID for the Psychometrics section in Zendesk
 SECTION_ID = '22802387434397'
 
+# Number of words in each chunk
+CHUNK_SIZE = 300
+
+# Number of words to overlap between chunks
+OVERLAP = 50 
+
 # The base URL for the Zendesk API
 BASE_URL = 'https://support.inspera.com/api/v2/help_center/en-us'
 
@@ -153,9 +159,9 @@ def chunk_text_to_file(json_articles, chunk_size, overlap):
 # -------------------
 # Main function to fetch article links and extract content
 # -------------------
-def main():
+def main(section_id=SECTION_ID):
     # Get the article links, IDs, and contents from the specified section
-    raw_articles = get_all_articles(SECTION_ID)
+    raw_articles = get_all_articles(section_id)
 
     # Write the content of all articles to a JSON file
     write_content_to_file(raw_articles)

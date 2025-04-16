@@ -102,6 +102,7 @@ def main():
     # Create a FAISS index from the embedded chunks
     create_faiss_index(embedded_chunks, INDEX_FILE)
 
+
 # -------------------
 # Executing the code using the main function
 # -------------------

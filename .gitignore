@@ -5,3 +5,5 @@ chunks.json
 faiss_chunks.index
 metadata.json
 embedded_chunks.json
+venv/
+__pycache__/
