@@ -1,8 +1,5 @@
 import streamlit as st
-import json
 import os
-import faiss
-import numpy as np
 from dotenv import load_dotenv
 import google.generativeai as genai
 
