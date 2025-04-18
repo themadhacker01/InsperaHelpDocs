@@ -1,6 +1,4 @@
 import streamlit as st
-import os
-from dotenv import load_dotenv
 import google.generativeai as genai
 
 # Import the functions from 3_query.py
@@ -14,12 +12,8 @@ METADATA_FILE = 'metadata.json'
 # Number of top results to retrieve
 TOP_K = 5
 
-
-# Load environment variables
-load_dotenv()
-
 # Set up the API key for Google Generative AI
-api_key = os.getenv('GEMINI_API_KEY')
+api_key = st.secrets['GEMINI_API_KEY']
 genai.configure(api_key=api_key)
 
 

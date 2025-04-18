@@ -1,6 +1,6 @@
-import json, os, faiss
+import json, faiss
 import numpy as np
-from dotenv import load_dotenv
+import streamlit as st
 import google.generativeai as genai
 
 
@@ -10,11 +10,8 @@ CHUNKS_FILE = 'chunks.json'
 # Set the path to the FAISS index file
 INDEX_FILE = 'faiss_chunks.index'
 
-# Load environment variables from .env
-load_dotenv()
-
 # Set up the API key for Google Generative AI
-api_key = os.getenv('GEMINI_API_KEY')
+api_key = st.secrets['GEMINI_API_KEY']
 genai.configure(api_key=api_key)
 
 

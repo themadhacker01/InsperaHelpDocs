@@ -1,9 +1,8 @@
 import json
-import os
 import faiss
 import numpy as np
-from dotenv import load_dotenv
 import google.generativeai as genai
+import streamlit as st
 
 
 # Paths to the files
@@ -16,11 +15,8 @@ TOP_K = 3
 # Model name for Google Generative AI
 MODEL_NAME = 'models/gemini-1.5-pro-002'
 
-# Load environment variables from .env
-load_dotenv()
-
 # Set up the API key for Google Generative AI
-api_key = os.getenv('GEMINI_API_KEY')
+api_key = st.secrets['GEMINI_API_KEY']
 genai.configure(api_key=api_key)
 
 
