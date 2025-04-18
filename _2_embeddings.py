@@ -26,6 +26,7 @@ def generate_embeddings(chunks):
 
     # Loop through each chunk and generate its embedding
     for chunk in chunks:
+        print(f'Embedding chunk {chunk["chunk_id"]}...')
         # Generate the embedding for the chunk using the Google GenAI API
         response = genai.embed_content(
             model='models/embedding-001',
