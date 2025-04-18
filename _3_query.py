@@ -99,8 +99,8 @@ def generate_summary(query, top_chunks):
         ---
 
         # Suggestions for improving the query
-        Suggest ways to improve the query if it is not clear or specific enough.
         Start the paragraph with "*Tip:*" and write the entire suggestion in italics.
+        Always add a suggestion ways to improve the query so that it is more clear and specific.
         '''
         f'\n\Query:\n{query}'
         f'\n\nContext:\n{context}'
