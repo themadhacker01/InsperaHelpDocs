@@ -1,7 +1,8 @@
 import streamlit as st
+import json
 import google.generativeai as genai
 
-# Import the functions from 3_query.py
+# Import the functions from _3_query.py
 from _3_query import semantic_search, generate_summary, load_assets
 
 
@@ -29,8 +30,13 @@ def display_ui(index_file=INDEX_FILE, metadata_file=METADATA_FILE):
     st.sidebar.subheader('Simply enter your query and we will answer it for you.')
     st.sidebar.write(
         '''
-        This application allows you to respond to your query about the psychometrics dashboard.
-        It strictly adheres to material added in the Help Center articles and does not include any other information. 
+        This application allows you to respond to your query about the Inspera platform.
+        It strictly adheres to Help Center articles and does not include any other information.
+
+        Right now, it is only available in English and only searches on text content.
+        But we are working on adding more languages and searching on images and videos as well.
+
+        Stay tuned for more updates!
         '''
     )
     
