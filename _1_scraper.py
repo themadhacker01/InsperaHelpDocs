@@ -2,9 +2,6 @@ import requests, json, uuid
 from bs4 import BeautifulSoup
 
 
-# The section ID for the Psychometrics section in Zendesk
-SECTION_ID = '22802387434397'
-
 # Number of words in each chunk
 CHUNK_SIZE = 300
 
@@ -16,11 +13,27 @@ BASE_URL = 'https://support.inspera.com/api/v2/help_center/en-us'
 
 
 # -------------------
+# Function to fetch all categories from the Zendesk API
+# -------------------
+def get_all_categories():
+    response = requests.get(f'{BASE_URL}/categories.json')
+    response.raise_for_status()
+    return response.json()['categories']
+
+
+# -------------------
+# Function to fetch all sections for a given category from the Zendesk API
+# -------------------
+def get_sections_for_category(category_id):
+    response = requests.get(f'{BASE_URL}/categories/{category_id}/sections.json')
+    response.raise_for_status()
+    return response.json()['sections']
+
+
+# -------------------
 # Fetch all articles from the Psychometrics section using the Zendesk API
 # -------------------
 def get_all_articles(section_id):
-    print('Fetching article links via API...')
-
     # Extracts all article links from a given section ID
     url = f'{BASE_URL}/sections/{section_id}/articles.json'
 
@@ -29,9 +42,7 @@ def get_all_articles(section_id):
 
     # Gets articles from the JSON response
     all_articles = response.json().get('articles', [])
-
-    print('Found '+ str(len(all_articles)) + ' articles in this section.')
-    print('Fetching article contents...')
+    print(f'--- {len(all_articles)} articles')
 
     return all_articles
 
@@ -56,8 +67,6 @@ def get_full_article(article_id):
 # Function to clean the HTML content of the article
 # -------------------
 def clean_html(html_body):
-    print('Cleaning HTML content...')
-
     # Parse the HTML content using BeautifulSoup
     soup = BeautifulSoup(html_body, 'html.parser')
     content_parts = []
@@ -84,16 +93,13 @@ def clean_html(html_body):
 # Function to write the cleaned content to a JSON file
 # -------------------
 def write_content_to_file(all_articles):
-    print('Writing content from all articles to file...')
-
     # Initialize an empty list to store the content of all articles
     all_content = []
 
     # Loop through each article and fetch its content
     for article in all_articles:
-        # Fetch the full article content using its ID
+        print(f'Adding article {article["id"]}...')
         full = get_full_article(article['id'])
-        # Clean the HTML content and store it in the list
         cleaned_body = clean_html(full['body'])
         # Append the cleaned content to the list
         all_content.append({
@@ -123,7 +129,7 @@ def chunk_text_to_file(json_articles, chunk_size, overlap):
 
     # Loop through each article and split its content into chunks
     for article in json_articles:
-        print(f'Picked article {article["id"]}...')
+        print(f'Chunking article {article["id"]}...')
 
         # Split the article content into words
         words = article['content'].split()
@@ -159,12 +165,28 @@ def chunk_text_to_file(json_articles, chunk_size, overlap):
 # -------------------
 # Main function to fetch article links and extract content
 # -------------------
-def main(section_id=SECTION_ID):
-    # Get the article links, IDs, and contents from the specified section
-    raw_articles = get_all_articles(section_id)
+def main():
+    categories = get_all_categories()
+    print('🗃️ Categories and their Sections:\n')
+
+    all_articles = []
+    # Loop through each category and fetch its sections
+    for category in categories:
+        print(f'📁 {category["name"]} (ID: {category["id"]})')
+
+        # Fetch sections for the current category
+        sections = get_sections_for_category(category['id'])
+        for section in sections:
+            print(f'- 📄 {section["name"]} (ID: {section["id"]}')
+
+            # Fetch articles for the specified section ID
+            section_articles = get_all_articles(section['id'])
+            all_articles.extend(section_articles)
+
+    print(f'🔎 Found {len(all_articles)} articles.')
 
     # Write the content of all articles to a JSON file
-    write_content_to_file(raw_articles)
+    write_content_to_file(all_articles)
 
     # Load the content from the JSON file
     with open('data.json', 'r', encoding='utf-8') as f:
