@@ -11,7 +11,7 @@ INDEX_FILE = 'faiss_chunks.index'
 METADATA_FILE = 'metadata.json'
 
 # Number of top results to retrieve
-TOP_K = 5
+TOP_K = 20
 
 # Set up the API key for Google Generative AI
 api_key = st.secrets['GEMINI_API_KEY']
@@ -56,12 +56,13 @@ def display_ui(index_file=INDEX_FILE, metadata_file=METADATA_FILE):
             summary = generate_summary(query, top_chunks)
 
             # Display the summary and relevant articles
-            st.subheader('Summary:')
+            st.header('Summary')
             st.write(summary)
 
-            st.subheader('Relevant Articles:')
-            for chunk in top_chunks:
-                st.markdown(f'- [{chunk["title"]}]({chunk["url"]})')
+            st.header('References')
+            unique_references = {chunk["title"]: chunk["url"] for chunk in top_chunks}
+            for title, url in unique_references.items():
+                st.markdown(f'- [{title}]({url})')
         else:
             st.warning('Please enter a query to search.')
 

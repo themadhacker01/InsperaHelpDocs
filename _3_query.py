@@ -10,7 +10,7 @@ INDEX_FILE = 'faiss_chunks.index'
 METADATA_FILE = 'metadata.json'
 
 # Number of top results to retrieve
-TOP_K = 50
+TOP_K = 20
 
 # Model name for Google Generative AI
 MODEL_NAME = 'models/gemini-1.5-pro-002'
@@ -71,7 +71,7 @@ def semantic_search(query, index, metadata, k):
 # Generate a summary from the top results using Gemini
 # -------------------
 def generate_summary(query, top_chunks):
-    print('Generating summary...')
+    print('Generating response...')
 
     # Join the text of the top chunks to create a context for summarization
     context = '\n\n'.join([chunk['text'] for chunk in top_chunks])
@@ -85,18 +85,16 @@ def generate_summary(query, top_chunks):
         # Instructions to respond to the query
         You are a helpful assistant that provides answers based on the context provided.
         You will be given a query and a context.
+        Respond to the query in the clearest way possible.
         Use the context that is relevant to the query.
         Provide some additional informatin in the response, if relevant.
         Do not change the terminology or keywords used in the document.
         The response must be coherent and easy to read.
-        If you do not know the answer, say "I don't know".
+        Structure the response into subheaders and paragraphs.
+        Do not add a header. Subheaders must be short and relevant to the content.
+        Use bullet points, lists and tables where appropriate.
         If the answer is not in the context, say "The answer is not in the context".
         Do not make up answers or provide information that is not in the context.
-        Do not include any disclaimers or unnecessary information.
-
-        ---
-        Add a line seperator between the instructions and the query.
-        ---
 
         # Suggestions for improving the query
         Start the paragraph with "*Tip:*" and write the entire suggestion in italics.
@@ -128,7 +126,7 @@ def main(index_path=INDEX_FILE, metadata_path=METADATA_FILE, top_k=TOP_K):
     # Summarize the top chunks
     summary = generate_summary(query, top_chunks)
 
-    print('\n🔎 Summary:')
+    print('\n🔎 Query Response:')
     print(summary)
 
     print('\n📄 Relevant Articles:')
