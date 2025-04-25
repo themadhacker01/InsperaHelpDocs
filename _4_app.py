@@ -41,7 +41,7 @@ def display_ui(index_file=INDEX_FILE, metadata_file=METADATA_FILE):
     )
     
     # Input box for search query
-    query = st.text_input('', placeholder='Type your question here...')
+    query = st.text_area('Text area to input query', placeholder='Type your question here...', label_visibility='collapsed', height=72)
 
     # When the user presses the 'Search' button
     if st.button('Search'):
