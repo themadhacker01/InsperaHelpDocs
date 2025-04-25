@@ -1,5 +1,6 @@
 # InsperaHelpDocs
 This project enables efficient searching of help center documentation using semantic search and summarization techniques.
+Try it out here https://inspera-docs-ai.streamlit.app/ and see for yourself!
 
 ## Implementation Details
 
