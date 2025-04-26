@@ -102,7 +102,6 @@ def display_ui(index_file=INDEX_FILE, metadata_file=METADATA_FILE):
 
             # Perform semantic search on the query
             top_chunks = semantic_search(query_prompt, index, metadata, top_k)
-            print(top_chunks)
 
             # Generate a summary based on the top chunks
             summary = generate_summary(query_prompt, top_chunks)
