@@ -89,12 +89,15 @@ def generate_summary(query, top_chunks):
         Use the context that is relevant to the query.
         Provide some additional informatin in the response, if relevant.
         Do not change the terminology or keywords used in the document.
-        The response must be coherent and easy to read.
+        The response must be coherent and sensible.
         Structure the response into subheaders and paragraphs.
         Do not add a header. Subheaders must be short and relevant to the content.
         Use bullet points, lists and tables where appropriate.
+
+        # Handling edge cases
         If the answer is not in the context, say "The answer is not in the context".
-        Do not make up answers or provide information that is not in the context.
+        Do not make up answers.
+        Tell them a concise description of the information that is in the context.
 
         # Suggestions for improving the query
         Start the paragraph with "*Tip:*" and write the entire suggestion in italics.
