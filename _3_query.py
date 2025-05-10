@@ -13,7 +13,7 @@ METADATA_FILE = 'metadata.json'
 TOP_K = 20
 
 # Model name for Google Generative AI
-MODEL_NAME = 'models/gemini-1.5-pro-002'
+MODEL_NAME = 'models/gemini-2.0-flash'
 
 # Set up the API key for Google Generative AI
 api_key = st.secrets['GEMINI_API_KEY']
